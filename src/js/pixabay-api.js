@@ -1,18 +1,17 @@
 import axios from 'axios';
-import { inputEL, loadMoreImgBtn } from '../main';
-import { createMarkup } from './render-functions';
 
+const limit = 15;
+export const totalPages = Math.ceil(100 / limit);
+
+import { loadPageImg, curentSearch } from '../main';
 export async function getPhotos() {
   const baseUrl = 'https://pixabay.com/api/';
   axios.defaults.baseURL = baseUrl;
-  const limit = 15;
-  let loadPageImg = 1;
-  console.log(loadPageImg);
   const key = '42471453-a4a004408e33f852748a0909e';
-  const query = inputEL.value;
   const typeImg = 'photo';
   const orientationImg = 'horizontal';
   const resultSearch = true;
+  console.log(loadPageImg);
 
   try {
     const response = await axios.get(baseUrl, {
@@ -20,21 +19,12 @@ export async function getPhotos() {
         page: loadPageImg,
         per_page: limit,
         key: key,
-        q: query,
+        q: curentSearch,
         image_type: typeImg,
         orientation: orientationImg,
         safesearch: resultSearch,
       },
     });
-
-    loadMoreImgBtn.addEventListener('click', updateImgList);
-
-    function updateImgList() {
-      console.log(response.data.hits);
-      loadPageImg += 1;
-      createMarkup(response.data.hits);
-    }
-    console.log(response.data.hits);
 
     return response.data;
   } catch (error) {
