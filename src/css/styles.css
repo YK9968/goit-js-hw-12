@@ -21,6 +21,14 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .feedback-form {
   margin-bottom: 30px;
 }
@@ -38,6 +46,7 @@
   flex-wrap: wrap;
   gap: 24px;
   row-gap: 24px;
+  margin-bottom: 32px;
 }
 
 .gallery-image {
@@ -123,7 +132,7 @@ input::placeholder {
   color: #808080;
 }
 
-button {
+.search-btn {
   border-radius: 8px;
   padding: 8px 16px;
   width: 91px;
@@ -138,6 +147,28 @@ button {
   color: #fff;
 }
 
-button:hover {
+.search-btn:hover {
+  background: #6c8cff;
+}
+
+.hidden {
+  display: none;
+}
+
+.load-more-img {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0.04em;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 125px;
+  height: 40px;
+  background: #4e75ff;
+  border: none;
+}
+
+.load-more-img:hover {
   background: #6c8cff;
 }

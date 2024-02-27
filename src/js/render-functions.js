@@ -1,4 +1,4 @@
-import { galleryListEl, loaderEl } from '../main';
+import { galleryListEl, loadMoreImgBtn, loaderEl } from '../main';
 
 export function createMarkup(images) {
   const markupImg = images
@@ -28,6 +28,7 @@ export function createMarkup(images) {
       }
     )
     .join('');
-  galleryListEl.innerHTML = markupImg;
+  galleryListEl.insertAdjacentHTML('beforeend', markupImg);
   loaderEl.classList.remove('loader');
+  loadMoreImgBtn.classList.remove('hidden');
 }

@@ -6,16 +6,18 @@ import cross from './img/error.svg';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-
 export const galleryListEl = document.querySelector('.gallery-list');
 export const inputEL = document.querySelector('input');
 const formSearchImg = document.querySelector('form');
+export const loadMoreImgBtn = document.querySelector('.load-more-img');
 export const loaderEl = document.querySelector('.form-container div');
+loadMoreImgBtn.classList.add('hidden');
 
 formSearchImg.addEventListener('submit', handleSearchImg);
 
 function handleSearchImg(event) {
   event.preventDefault();
+
   galleryListEl.innerHTML = '';
 
   if (inputEL.value.trim() === '') {
