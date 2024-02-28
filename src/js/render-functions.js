@@ -4,11 +4,8 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import cross from '../img/error.svg';
 // ================================================================ ^ import ^ ======================
-export const galleryListEl = document.querySelector('.gallery-list');
-export const loadMoreImgBtn = document.querySelector('.load-more-img');
-export const loaderEl = document.querySelector('.form-container div');
 
-export function createMarkup(images) {
+export function createMarkup(images, domEl) {
   const markupImg = images
     .map(
       ({
@@ -36,9 +33,7 @@ export function createMarkup(images) {
       }
     )
     .join('');
-  galleryListEl.insertAdjacentHTML('beforeend', markupImg);
-  loaderEl.classList.remove('loader');
-  loadMoreImgBtn.classList.remove('hidden');
+  domEl.insertAdjacentHTML('beforeend', markupImg);
 }
 
 export function showBigImgLibrary() {

@@ -3,16 +3,15 @@ import {
   createMarkup, // function create Markup
   showBigImgLibrary, // function library SimpleLightbox
   showErrorCustom, // function library iziToast
-  galleryListEl, // DOM element list
-  loadMoreImgBtn, // DOM element button load more img
-  loaderEl, // DOM element icon loading before img
-  // loadingEl, // DOM element icon loading after click button loadMoreImgBtn
 } from './js/render-functions';
 
 // ================================================================ ^ import ^ ======================
 const loadingEl = document.querySelector('.loading');
 const inputEL = document.querySelector('input');
 const formSearchImg = document.querySelector('form');
+const loadMoreImgBtn = document.querySelector('.load-more-img');
+const loaderEl = document.querySelector('.form-container div');
+const galleryListEl = document.querySelector('.gallery-list');
 let loadPageImg = 1;
 let curentSearch;
 
@@ -34,27 +33,30 @@ function handleSearchImg(event) {
   loaderEl.classList.add('loader');
 
   // ================================================================= ^ button check ^ =====================
+
   getPhotos(loadPageImg, curentSearch).then(data => {
     if (data.total === 0) {
       showErrorCustom(
         'Sorry, there are no images matching your search query. Please try again!'
       );
-
       loaderEl.classList.remove('loader');
       loadMoreImgBtn.classList.add('hidden');
       return;
     }
     // ======================================================================= ^ pixabay.API ^ =============
-    createMarkup(data.hits);
-    // ======================================================================= ^ markup ^ ===================
+    createMarkup(data.hits, galleryListEl);
+    loaderEl.classList.remove('loader');
+    loadMoreImgBtn.classList.remove('hidden');
+    // ======================================================================= ^ markup img ^ ===================
     loadMoreImgBtn.addEventListener('click', addMoreImg);
 
     function addMoreImg() {
       loadingEl.classList.add('loader');
       loadMoreImgBtn.classList.add('hidden');
       loadPageImg += 1;
-      getPhotos().then(data => {
-        createMarkup(data.hits);
+      getPhotos(loadPageImg, curentSearch).then(data => {
+        createMarkup(data.hits, galleryListEl);
+        loaderEl.classList.remove('loader');
         loadingEl.classList.remove('loader');
         loadMoreImgBtn.classList.remove('hidden');
         if (data.hits.length < 15) {
