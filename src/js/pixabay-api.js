@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { showErrorCustom } from './render-functions';
 
 const limit = 15;
 
@@ -25,6 +26,8 @@ export async function getPhotos(pageImg, curentImg) {
 
     return response.data;
   } catch (error) {
-    console.log(error);
+    showErrorCustom(
+      'You have more 100 requests per minute.Please restart page'
+    );
   }
 }
