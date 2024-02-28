@@ -1,19 +1,20 @@
-import { getPhotos, totalPages } from './js/pixabay-api';
-import { createMarkup } from './js/render-functions';
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
-import cross from './img/error.svg';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import { getPhotos } from './js/pixabay-api';
+import {
+  createMarkup, // function create Markup
+  showBigImgLibrary, // function library SimpleLightbox
+  showErrorCustom, // function library iziToast
+  galleryListEl, // DOM element list
+  loadMoreImgBtn, // DOM element button load more img
+  loaderEl, // DOM element icon loading before img
+  // loadingEl, // DOM element icon loading after click button loadMoreImgBtn
+} from './js/render-functions';
 
 // ================================================================ ^ import ^ ======================
-export const galleryListEl = document.querySelector('.gallery-list');
-export const inputEL = document.querySelector('input');
+const loadingEl = document.querySelector('.loading');
+const inputEL = document.querySelector('input');
 const formSearchImg = document.querySelector('form');
-export const loadMoreImgBtn = document.querySelector('.load-more-img');
-export const loaderEl = document.querySelector('.form-container div');
-export let loadPageImg = 1;
-export let curentSearch;
+let loadPageImg = 1;
+let curentSearch;
 
 // ================================================================= ^ var ^ =========================
 loadMoreImgBtn.classList.add('hidden');
@@ -27,25 +28,18 @@ function handleSearchImg(event) {
 
   if (inputEL.value.trim() === '') {
     loadMoreImgBtn.classList.add('hidden');
+    showErrorCustom('Sorry, input is emty. Please try again!');
     return;
   }
   loaderEl.classList.add('loader');
 
   // ================================================================= ^ button check ^ =====================
-  getPhotos().then(data => {
+  getPhotos(loadPageImg, curentSearch).then(data => {
     if (data.total === 0) {
-      iziToast.error({
-        iconUrl: cross,
-        messageColor: '#ffffff',
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-        backgroundColor: '#EF4040',
-        position: 'topRight',
-        messageSize: 16,
-        layout: 2,
-        maxWidth: 380,
-        theme: 'dark',
-      });
+      showErrorCustom(
+        'Sorry, there are no images matching your search query. Please try again!'
+      );
+
       loaderEl.classList.remove('loader');
       loadMoreImgBtn.classList.add('hidden');
       return;
@@ -56,32 +50,24 @@ function handleSearchImg(event) {
     loadMoreImgBtn.addEventListener('click', addMoreImg);
 
     function addMoreImg() {
-      if (loadPageImg > totalPages) {
-        loadMoreImgBtn.classList.add('hidden');
-        return iziToast.error({
-          position: 'topRight',
-          message: "We're sorry, but you've reached the end of search results.",
-          iconUrl: cross,
-          messageColor: '#ffffff',
-          backgroundColor: '#EF4040',
-
-          messageSize: 16,
-          layout: 2,
-          maxWidth: 380,
-          theme: 'dark',
-        });
-      }
+      loadingEl.classList.add('loader');
+      loadMoreImgBtn.classList.add('hidden');
       loadPageImg += 1;
       getPhotos().then(data => {
         createMarkup(data.hits);
+        loadingEl.classList.remove('loader');
+        loadMoreImgBtn.classList.remove('hidden');
+        if (data.hits.length < 15) {
+          loadMoreImgBtn.classList.add('hidden');
+          return showErrorCustom(
+            "We're sorry, but you've reached the end of search results."
+          );
+        }
+        showBigImgLibrary();
       });
     }
-    // ======================================================================= ^ download more img ^ ============
-    const lightbox = new SimpleLightbox('.gallery-list a', {
-      captionsData: 'alt',
-      captionDelay: 250,
-    });
-    lightbox.refresh();
+    showBigImgLibrary();
+    // ======================================================================= ^ load more img ^ ============
   });
   // ======================================================================= ^ librarys ^ ======================
   formSearchImg.reset();

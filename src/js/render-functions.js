@@ -1,4 +1,12 @@
-import { galleryListEl, loadMoreImgBtn, loaderEl } from '../main';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import cross from '../img/error.svg';
+// ================================================================ ^ import ^ ======================
+export const galleryListEl = document.querySelector('.gallery-list');
+export const loadMoreImgBtn = document.querySelector('.load-more-img');
+export const loaderEl = document.querySelector('.form-container div');
 
 export function createMarkup(images) {
   const markupImg = images
@@ -31,4 +39,26 @@ export function createMarkup(images) {
   galleryListEl.insertAdjacentHTML('beforeend', markupImg);
   loaderEl.classList.remove('loader');
   loadMoreImgBtn.classList.remove('hidden');
+}
+
+export function showBigImgLibrary() {
+  const lightbox = new SimpleLightbox('.gallery-list a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
+  lightbox.refresh();
+}
+
+export function showErrorCustom(message) {
+  iziToast.error({
+    position: 'topRight',
+    message: message,
+    iconUrl: cross,
+    messageColor: '#ffffff',
+    backgroundColor: '#EF4040',
+    messageSize: 16,
+    layout: 2,
+    maxWidth: 380,
+    theme: 'dark',
+  });
 }
