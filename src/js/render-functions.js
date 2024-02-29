@@ -2,7 +2,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import cross from '../img/error.svg';
+
 // ================================================================ ^ import ^ ======================
 
 export function createMarkup(images, domEl) {
@@ -44,13 +44,13 @@ export function showBigImgLibrary() {
   lightbox.refresh();
 }
 
-export function showErrorCustom(message) {
-  iziToast.error({
+export function showErrorCustom(message, colorBg, icon) {
+  iziToast.info({
     position: 'topRight',
     message: message,
-    iconUrl: cross,
+    iconUrl: icon,
     messageColor: '#ffffff',
-    backgroundColor: '#EF4040',
+    backgroundColor: colorBg,
     messageSize: 16,
     layout: 2,
     maxWidth: 380,

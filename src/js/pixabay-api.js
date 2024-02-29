@@ -23,7 +23,6 @@ export async function getPhotos(pageImg, curentImg) {
         safesearch: resultSearch,
       },
     });
-
     return response.data;
   } catch (error) {
     showErrorCustom(
