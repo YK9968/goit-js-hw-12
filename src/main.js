@@ -1,4 +1,4 @@
-import { getPhotos } from './js/pixabay-api';
+import { getPhotos, limit } from './js/pixabay-api';
 import {
   renderMarkup, // function create Markup
   showErrorCustom, // function library iziToast
@@ -81,7 +81,7 @@ async function addMoreImg() {
       top: 575.6666870117188,
       behavior: 'smooth',
     });
-    if (data.hits.length < 15) {
+    if (data.hits.length < limit) {
       loadMoreImgBtn.classList.add('hidden');
       return showErrorCustom(
         "We're sorry, but you've reached the end of search results.",
