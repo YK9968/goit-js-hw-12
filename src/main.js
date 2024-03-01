@@ -21,11 +21,12 @@ loadMoreImgBtn.classList.add('hidden');
 
 formSearchImg.addEventListener('submit', handleSearchImg);
 
-function handleSearchImg(event) {
+async function handleSearchImg(event) {
   event.preventDefault();
   loadPageImg = 1;
   curentSearch = inputEL.value;
   galleryListEl.innerHTML = '';
+  loadMoreImgBtn.classList.add('hidden');
 
   if (inputEL.value.trim() === '') {
     loadMoreImgBtn.classList.add('hidden');
@@ -36,29 +37,27 @@ function handleSearchImg(event) {
 
   // ================================================================= ^ button check ^ =====================
 
-  async function fetchData() {
-    try {
-      const data = await getPhotos(loadPageImg, curentSearch);
-      if (data.total === 0) {
-        showErrorCustom(
-          'Sorry, there are no images matching your search query. Please try again!',
-          '#EF4040',
-          cross
-        );
-        loadingBeforeImgEl.classList.remove('loader');
-        loadMoreImgBtn.classList.add('hidden');
-        return;
-      }
-      renderMarkup(data.hits, galleryListEl);
+  try {
+    const data = await getPhotos(loadPageImg, curentSearch);
+    if (data.total === 0) {
+      showErrorCustom(
+        'Sorry, there are no images matching your search query. Please try again!',
+        '#EF4040',
+        cross
+      );
       loadingBeforeImgEl.classList.remove('loader');
-      loadMoreImgBtn.classList.remove('hidden');
-
-      lightbox.refresh();
-    } catch (error) {
-      showErrorCustom('Something went wrong.Please try later');
+      loadMoreImgBtn.classList.add('hidden');
+      formSearchImg.reset();
+      return;
     }
+    renderMarkup(data.hits, galleryListEl);
+    loadingBeforeImgEl.classList.remove('loader');
+    loadMoreImgBtn.classList.remove('hidden');
+
+    lightbox.refresh();
+  } catch (error) {
+    showErrorCustom('Something went wrong.Please try later');
   }
-  fetchData();
   // ======================================================================= ^ librarys ^ ======================
   formSearchImg.reset();
 }
