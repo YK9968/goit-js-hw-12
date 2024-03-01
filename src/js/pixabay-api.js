@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { showErrorCustom } from './render-functions';
 
 const limit = 15;
 
@@ -11,22 +10,16 @@ export async function getPhotos(pageImg, curentImg) {
   const orientationImg = 'horizontal';
   const resultSearch = true;
 
-  try {
-    const response = await axios.get(baseUrl, {
-      params: {
-        page: pageImg,
-        per_page: limit,
-        key: key,
-        q: curentImg,
-        image_type: typeImg,
-        orientation: orientationImg,
-        safesearch: resultSearch,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    showErrorCustom(
-      'You have more 100 requests per minute.Please restart page'
-    );
-  }
+  const response = await axios.get(baseUrl, {
+    params: {
+      page: pageImg,
+      per_page: limit,
+      key: key,
+      q: curentImg,
+      image_type: typeImg,
+      orientation: orientationImg,
+      safesearch: resultSearch,
+    },
+  });
+  return response.data;
 }

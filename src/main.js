@@ -1,10 +1,10 @@
 import { getPhotos } from './js/pixabay-api';
 import {
-  createMarkup, // function create Markup
-  showBigImgLibrary, // function library SimpleLightbox
+  renderMarkup, // function create Markup
   showErrorCustom, // function library iziToast
 } from './js/render-functions';
 import cross from './img/error.svg';
+import { lightbox } from './js/create-modal-img';
 
 // ================================================================ ^ import ^ ======================
 const loadingAfterImgEl = document.querySelector('.loading');
@@ -36,38 +36,42 @@ function handleSearchImg(event) {
 
   // ================================================================= ^ button check ^ =====================
 
-  getPhotos(loadPageImg, curentSearch).then(data => {
-    if (data.total === 0) {
-      showErrorCustom(
-        'Sorry, there are no images matching your search query. Please try again!',
-        '#EF4040',
-        cross
-      );
+  async function fetchData() {
+    try {
+      const data = await getPhotos(loadPageImg, curentSearch);
+      if (data.total === 0) {
+        showErrorCustom(
+          'Sorry, there are no images matching your search query. Please try again!',
+          '#EF4040',
+          cross
+        );
+        loadingBeforeImgEl.classList.remove('loader');
+        loadMoreImgBtn.classList.add('hidden');
+        return;
+      }
+      renderMarkup(data.hits, galleryListEl);
       loadingBeforeImgEl.classList.remove('loader');
-      loadMoreImgBtn.classList.add('hidden');
-      return;
-    }
-    // ======================================================================= ^ pixabay.API ^ =============
-    createMarkup(data.hits, galleryListEl);
-    loadingBeforeImgEl.classList.remove('loader');
-    loadMoreImgBtn.classList.remove('hidden');
-    // ======================================================================= ^ markup img ^ ===================
+      loadMoreImgBtn.classList.remove('hidden');
 
-    showBigImgLibrary();
-    // ======================================================================= ^ load more img ^ ============
-  });
+      lightbox.refresh();
+    } catch (error) {
+      showErrorCustom('Something went wrong.Please try later');
+    }
+  }
+  fetchData();
   // ======================================================================= ^ librarys ^ ======================
   formSearchImg.reset();
 }
 
 loadMoreImgBtn.addEventListener('click', addMoreImg);
 
-function addMoreImg() {
+async function addMoreImg() {
   loadPageImg += 1;
   loadingAfterImgEl.classList.add('loader');
   loadMoreImgBtn.classList.add('hidden');
-  getPhotos(loadPageImg, curentSearch).then(data => {
-    createMarkup(data.hits, galleryListEl);
+  try {
+    const data = await getPhotos(loadPageImg, curentSearch);
+    renderMarkup(data.hits, galleryListEl);
     loadingBeforeImgEl.classList.remove('loader');
     loadingAfterImgEl.classList.remove('loader');
     loadMoreImgBtn.classList.remove('hidden');
@@ -84,6 +88,9 @@ function addMoreImg() {
         '#0071BD'
       );
     }
-    showBigImgLibrary();
-  });
+    lightbox.refresh();
+  } catch (error) {
+    loadingAfterImgEl.classList.remove('loader');
+    showErrorCustom('You have more 100 requests per minute.Please try later');
+  }
 }

@@ -1,11 +1,10 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 // ================================================================ ^ import ^ ======================
 
-export function createMarkup(images, domEl) {
+export function renderMarkup(images, domEl) {
   const markupImg = images
     .map(
       ({
@@ -34,14 +33,6 @@ export function createMarkup(images, domEl) {
     )
     .join('');
   domEl.insertAdjacentHTML('beforeend', markupImg);
-}
-
-export function showBigImgLibrary() {
-  const lightbox = new SimpleLightbox('.gallery-list a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
-  lightbox.refresh();
 }
 
 export function showErrorCustom(message, colorBg, icon) {
