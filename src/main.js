@@ -54,6 +54,14 @@ async function handleSearchImg(event) {
     loadingBeforeImgEl.classList.remove('loader');
     loadMoreImgBtn.classList.remove('hidden');
 
+    if (data.totalHits < loadPageImg * limit) {
+      loadMoreImgBtn.classList.add('hidden');
+      return showErrorCustom(
+        "We're sorry, but you've reached the end of search results.",
+        '#0071BD'
+      );
+    }
+
     lightbox.refresh();
   } catch (error) {
     showErrorCustom('Something went wrong.Please try later');
@@ -71,6 +79,11 @@ async function addMoreImg() {
   try {
     const data = await getPhotos(loadPageImg, curentSearch);
     renderMarkup(data.hits, galleryListEl);
+    if (Math.floor(data.totalHits / limit) === loadPageImg) {
+      loadingAfterImgEl.classList.remove('loader');
+      showErrorCustom('You have more 500 images.Please try later');
+      return;
+    }
     loadingBeforeImgEl.classList.remove('loader');
     loadingAfterImgEl.classList.remove('loader');
     loadMoreImgBtn.classList.remove('hidden');
@@ -80,7 +93,7 @@ async function addMoreImg() {
       top: 575.6666870117188,
       behavior: 'smooth',
     });
-    if (data.hits.length < limit) {
+    if (data.totalHits < loadPageImg * limit) {
       loadMoreImgBtn.classList.add('hidden');
       return showErrorCustom(
         "We're sorry, but you've reached the end of search results.",
@@ -89,7 +102,6 @@ async function addMoreImg() {
     }
     lightbox.refresh();
   } catch (error) {
-    loadingAfterImgEl.classList.remove('loader');
-    showErrorCustom('You have more 100 requests per minute.Please try later');
+    showErrorCustom('Something went wrong.Please try later');
   }
 }
